@@ -3,9 +3,182 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700;800&display=swap" rel="stylesheet" />
+	<link rel="shortcut icon" href="/assets/favicon.ico" />
+	<meta name="robots" content="noindex">
+	
 	<title>Beak - Magic link</title>
+
+	<style>
+		:root {
+			--logo-asset: url('/assets/logo.svg');
+			--ds-primary-fill: #d45d80;
+			--ds-primary-fill-rgb: 212, 93, 128;
+			--ds-background: #f2f2f2;
+			--ds-text-on-surface: #3A3F55;
+			--ds-text-on-surface-secondary: #4B5178;
+			--ds-text-alert: #FC3233;
+
+			--ds-background-border-separator: #1a1e2d;
+		}
+
+		body {
+			font-family: 'Open Sans', sans-serif;
+			background: var(--ds-background);
+			color: var(--ds-text-on-surface);
+			overflow-x: hidden;
+		}
+
+		p {
+			margin-bottom: 5px;
+		}
+
+		button {
+			border: none;
+			border-radius: 6px;
+			background: var(--ds-primary-fill);
+			color: white;
+			cursor: pointer;
+
+			padding: 9px 12px;
+			font-size: 15px;
+
+			transition: transform ease .2s;
+		}
+		button:hover {
+			box-shadow: 0px 4px 22px rgba(var(--ds-primary-fill-rgb), 0.25);
+		}
+		button:active {
+			transform: translateY(2px);
+		}
+
+		header {
+			margin: 0 auto;
+			padding: 0 25px;
+
+			text-transform: uppercase;
+			text-align: center;
+			font-weight: 700;
+			font-size: 20px;
+			line-height: 26px;
+		}
+
+		header .header-logo {
+			background-image: var(--logo-asset);
+			background-size: contain;
+			width: 43px;
+			height: 26px;
+			margin: 10px auto;
+		}
+
+		.container {
+			max-width: 800px;
+			padding: 0 25px;
+			margin: 20px auto;
+		}
+
+		.error-container {
+			display: none;
+			font-size: 13px;
+			text-align: center;
+			color: var(--ds-text-alert);
+		}
+
+		.genie-magic-helper {
+			/* display: none; */
+			text-align: center;
+		}
+		textarea.beak-code {
+			border-radius: 4px;
+			border: 1px solid var(--ds-background-border-separator);
+			padding: 8px;
+			width: calc(100% - 50px);
+		}
+	</style>
 </head>
 <body>
-	
+	<header>
+		<div class="header-logo"></div>
+		<span>Beak</span>
+	</header>
+
+	<main class="container">
+		<div class="error-container"></div>
+		<div class="genie-magic-helper">
+			<p>If Beak didn't open, tap the button below 👇</p>
+			<button class="launch-beak">Launch Beak</button>
+
+			<p>If that still doesn't work, copy the code below into beak:</p>
+			<textarea
+				class="beak-code"
+				rows="4"
+				onclick="this.setSelectionRange(0, this.value.length)"
+			></textarea >
+		</div>
+	</main>
+
+	<script>
+		const errors = {
+			'invalid_search': 'There was a problem reading the magic link. Double check the url is correct!',
+		};
+
+		function parseSearch() {
+			const urlSearch = window.location.search;
+			const parsedSearch = new URLSearchParams(urlSearch);
+			const code = parsedSearch.get('code');
+			const state = parsedSearch.get('state');
+
+			if (!code || !state)
+				throw new Error(errors.invalid_search);
+
+			return { code, state };
+		}
+
+		function createBeakUrl(search) {
+			const urlBase = 'beak-app://nest/magic-link';
+			const createdSearch = new URLSearchParams(search);
+			
+			const searchStr = createdSearch.toString();
+
+			return `${urlBase}?${createdSearch}`;
+		}
+
+		function prepareUI(search, url) {
+			const genieContainer = document.querySelector('.genie-magic-helper');
+			const beakCode = document.querySelector('.beak-code');
+			const launchBeak = document.querySelector('.launch-beak');
+
+			const createdSearch = new URLSearchParams(search);
+
+			beakCode.innerHTML = createdSearch.toString();
+			
+			launchBeak.addEventListener('click', function doClick() {
+				window.open(url);
+			});
+
+			genieContainer.setAttribute('style', 'display: block;');
+		}
+
+		function attemptDirectLoad(url) {
+			window.open(url);
+		}
+
+		function main() {
+			try {
+				const search = parseSearch();
+				const url = createBeakUrl(search);
+				
+				prepareUI(search, url);
+				attemptDirectLoad(url);
+			} catch (error) {
+				const errorContainer = document.querySelector('.error-container');
+
+				errorContainer.innerHTML = error.message;
+				errorContainer.setAttribute('style', 'display: block;');
+			}
+		}
+
+		main();
+	</script>
 </body>
 </html>
