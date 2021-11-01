@@ -14,8 +14,9 @@
 			--logo-asset: url('/assets/logo.svg');
 			--ds-primary-fill: #d45d80;
 			--ds-primary-fill-rgb: 212, 93, 128;
-			--ds-background: #f2f2f2;
-			--ds-text-on-surface: #3A3F55;
+			--ds-secondary-background: #161824;
+			--ds-surface-highlight: #1b1e2b;
+			--ds-text-on-surface: #fff;
 			--ds-text-on-surface-secondary: #4B5178;
 			--ds-text-alert: #FC3233;
 
@@ -24,13 +25,10 @@
 
 		body {
 			font-family: 'Open Sans', sans-serif;
-			background: var(--ds-background);
+			background: var(--ds-secondary-background);
 			color: var(--ds-text-on-surface);
 			overflow-x: hidden;
-		}
-
-		p {
-			margin-bottom: 5px;
+			font-size: 14px;
 		}
 
 		button {
@@ -90,6 +88,8 @@
 		}
 		textarea.beak-code {
 			border-radius: 4px;
+			background: var(--ds-surface-highlight);
+			color: var(--ds-text-on-surface);
 			border: 1px solid var(--ds-background-border-separator);
 			padding: 8px;
 			width: calc(100% - 50px);
