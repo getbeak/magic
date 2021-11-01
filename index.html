@@ -16,6 +16,7 @@
 			--ds-primary-fill-rgb: 212, 93, 128;
 			--ds-secondary-background: #161824;
 			--ds-surface-highlight: #1b1e2b;
+			--ds-secondary-surface: #242941;
 			--ds-text-on-surface: #fff;
 			--ds-text-on-surface-secondary: #4B5178;
 			--ds-text-alert: #FC3233;
@@ -93,6 +94,13 @@
 			border: 1px solid var(--ds-background-border-separator);
 			padding: 8px;
 			width: calc(100% - 50px);
+			transition: all .2s ease;
+		}
+		textarea.beak-code:hover {
+			background: var(--ds-secondary-surface);
+		}
+		textarea.beak-code:focus {
+			outline: 2px solid var(--ds-primary-fill);
 		}
 	</style>
 </head>
